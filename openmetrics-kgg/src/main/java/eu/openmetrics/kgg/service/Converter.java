@@ -57,7 +57,7 @@ public class Converter {
 		rdfModel.setNsPrefix("brick", "https://brickschema.org/schema/1.1/Brick#");
 		rdfModel.setNsPrefix("bot", "https://w3id.org/bot#");
 		rdfModel.setNsPrefix("beo", "https://pi.pauwel.be/voc/buildingelement#");
-		rdfModel.setNsPrefix("props", "#");
+		rdfModel.setNsPrefix("props", "https://w3id.org/props#");
 
 		Iterator<IfcProject> projectIterator = ifcModel.getAllE(IfcProject.class).iterator();
 		if(projectIterator.hasNext()){
@@ -135,7 +135,7 @@ public class Converter {
 					resBuilding.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "hasStorey"), resStorey);
 					resBuilding.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasPart"), resStorey);
 					
-					// 1. using decomposedBy
+					// using decomposedBy
 					Iterator<IfcRelAggregates> buildingStoreyRelAggregatesIterator = buildingStorey.getIsDecomposedBy().iterator(); 
 					if(buildingStoreyRelAggregatesIterator.hasNext()) {
 						List<IfcObjectDefinition> buildingStoreyRelatedObjectList = buildingStoreyRelAggregatesIterator.next().getRelatedObjects();
@@ -144,12 +144,12 @@ public class Converter {
 								IfcProduct product = (IfcProduct) buildingStoreyRelatedObject;					
 								parseProduct(product, resStorey);
 							}else {
-								// we exclude some entities
+								// we exclude some unnecessary entities
 								log.warn("unsupported case");
 							}
 						}
 					}
-					// 2. using containedInSpatialStructure
+					// using containedInSpatialStructure
 					Iterator<IfcRelContainedInSpatialStructure> buildingStoreyContainedInSpatialStructureIterator = buildingStorey.getContainsElements().iterator();
 					while(buildingStoreyContainedInSpatialStructureIterator.hasNext()) {
 						IfcRelContainedInSpatialStructure relContainedInSpatialStructure = buildingStoreyContainedInSpatialStructureIterator.next();
@@ -213,7 +213,6 @@ public class Converter {
 					log.warn("unsupported case");
 				}
 			}
-			
 		}else if(product instanceof IfcSpace) {
 			IfcSpace ifcSpace = (IfcSpace) product;
 			Resource resSpace = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Space_" + ifcSpace.getExpressId());
@@ -310,6 +309,8 @@ public class Converter {
 				resWindow.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  ifcWindow.getName() != null ? ifcWindow.getName().getValue() : "Undefined"  ));
 				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
 				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Window"));
+				// update parent
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "hasSabElement"), resWindow);													
 			}else {
 				log.warn("unsupported case");
 			}
