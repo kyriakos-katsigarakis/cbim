@@ -259,11 +259,36 @@ public class Converter {
 			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resBeam);
 		}else if(product instanceof IfcRoof) {
 			IfcRoof ifcRoof = (IfcRoof) product;			
-
-			// 1. hasOpenings
-			
-			
-			// 2. isDecomposedBy (e.g. slabs)
+			if(ifcRoof.getRepresentation() != null) { // hasGeometry
+				Resource resRoof = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Roof_" + ifcRoof.getExpressId());
+				resRoof.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcRoof.getName() != null ? ifcRoof.getName().getValue() : "Undefined" ));
+				resRoof.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+				resRoof.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Roof"));
+				// update parent
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resRoof);
+				// openings
+				Iterator<IfcRelVoidsElement> roofOpeningIterator = ifcRoof.getHasOpenings().iterator();
+				if(roofOpeningIterator.hasNext()) {
+					IfcRelVoidsElement relVoidsElement = roofOpeningIterator.next();
+					if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
+						IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
+						parseOpening(opening, resRoof);
+					}else {
+						log.warn("unsupported case");
+					}
+				}
+			}else { // isDecomposedBy
+				Iterator<IfcRelAggregates> roofRelAggregatesIterator = ifcRoof.getIsDecomposedBy().iterator();
+				if(roofRelAggregatesIterator.hasNext()) {
+					List<IfcObjectDefinition> roofRelatedObjectList = roofRelAggregatesIterator.next().getRelatedObjects();
+					for(IfcObjectDefinition roofRelatedObject : roofRelatedObjectList) {
+						if(roofRelatedObject instanceof IfcProduct){
+							IfcProduct subProduct = (IfcProduct) roofRelatedObject;
+							parseProduct(subProduct, resParent);
+						}
+					}
+				}
+			}
 		}
 	}
 	
