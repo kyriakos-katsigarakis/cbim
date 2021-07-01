@@ -114,7 +114,6 @@ public class Converter {
 		while(buildingContainedInSpatialStructureIterator.hasNext()) {
 			IfcRelContainedInSpatialStructure relContainedInSpatialStructure = buildingContainedInSpatialStructureIterator.next();
 			for(IfcProduct product : relContainedInSpatialStructure.getRelatedElements()) {
-				// -->
 				parseProduct(product, resBuilding);
 			}
 		}
@@ -142,8 +141,7 @@ public class Converter {
 						List<IfcObjectDefinition> buildingStoreyRelatedObjectList = buildingStoreyRelAggregatesIterator.next().getRelatedObjects();
 						for(IfcObjectDefinition buildingStoreyRelatedObject : buildingStoreyRelatedObjectList) {
 							if(buildingStoreyRelatedObject instanceof IfcProduct) {
-								IfcProduct product = (IfcProduct) buildingStoreyRelatedObject;
-								// -->						
+								IfcProduct product = (IfcProduct) buildingStoreyRelatedObject;					
 								parseProduct(product, resStorey);
 							}else {
 								// we exclude some entities
@@ -156,7 +154,6 @@ public class Converter {
 					while(buildingStoreyContainedInSpatialStructureIterator.hasNext()) {
 						IfcRelContainedInSpatialStructure relContainedInSpatialStructure = buildingStoreyContainedInSpatialStructureIterator.next();
 						for(IfcProduct product : relContainedInSpatialStructure.getRelatedElements()) {
-							// -->
 							parseProduct(product, resStorey);
 						}
 					}					
@@ -168,43 +165,54 @@ public class Converter {
 	}
 	
 	private void parseProduct(IfcProduct product, Resource resParent) {
-		
 		if(product instanceof IfcWall) {
 			IfcWall ifcWall = (IfcWall) product;
-			Resource resSpace = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Wall_" + ifcWall.getExpressId());
-			resSpace.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcWall.getName() != null ? ifcWall.getName().getValue() : "Undefined" ));
-			resSpace.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
-			resSpace.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
+			Resource resWall = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Wall_" + ifcWall.getExpressId());
+			resWall.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcWall.getName() != null ? ifcWall.getName().getValue() : "Undefined" ));
+			resWall.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+			resWall.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
 			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcWall.getHasOpenings().iterator();
 			if(wallOpeningIterator.hasNext()) {
 				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
 				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
-					parseOpening(opening, resSpace);
+					parseOpening(opening, resWall);
 				}else {
 					log.warn("unsupported case");
 				}
 			}
 		}else if(product instanceof IfcWallStandardCase) {
 			IfcWallStandardCase ifcWallStandardCase = (IfcWallStandardCase) product;
-			Resource resSpace = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "WallStandardCase_" + ifcWallStandardCase.getExpressId());
-			resSpace.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcWallStandardCase.getName() != null ? ifcWallStandardCase.getName().getValue() : "Undefined" ));
-			resSpace.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
-			resSpace.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
+			Resource resWall = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "WallStandardCase_" + ifcWallStandardCase.getExpressId());
+			resWall.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcWallStandardCase.getName() != null ? ifcWallStandardCase.getName().getValue() : "Undefined" ));
+			resWall.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+			resWall.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
 			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcWallStandardCase.getHasOpenings().iterator();
 			if(wallOpeningIterator.hasNext()) {
 				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
 				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
-					parseOpening(opening, resSpace);
+					parseOpening(opening, resWall);
 				}else {
 					log.warn("unsupported case");
 				}
 			}
 		}else if(product instanceof IfcSlab) {
 			IfcSlab ifcSlab = (IfcSlab) product;
-			//
-			//
+			Resource resSlab = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Slab_" + ifcSlab.getExpressId());
+			resSlab.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcSlab.getName() != null ? ifcSlab.getName().getValue() : "Undefined" ));
+			resSlab.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+			resSlab.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
+			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcSlab.getHasOpenings().iterator();
+			if(wallOpeningIterator.hasNext()) {
+				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
+				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
+					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
+					parseOpening(opening, resSlab);
+				}else {
+					log.warn("unsupported case");
+				}
+			}
 			
 		}else if(product instanceof IfcSpace) {
 			IfcSpace ifcSpace = (IfcSpace) product;
@@ -229,26 +237,29 @@ public class Converter {
 					}else {
 						log.warn("unsupported case");
 					}
-					
 				}else {
 					log.warn("unsupported case");
 				}
 			}
 		}else if(product instanceof IfcColumn) {
 			IfcColumn ifcColumn = (IfcColumn) product;
-			//
-			//
-				
+			Resource resColumn = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Column_" + ifcColumn.getExpressId());
+			resColumn.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcColumn.getName() != null ? ifcColumn.getName().getValue() : "Undefined" ));
+			resColumn.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+			resColumn.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Column"));
+			// update parent
+			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resColumn);		
 		}else if(product instanceof IfcBeam) {
 			IfcBeam ifcBeam = (IfcBeam) product;
-			//
-			//
-			
+			Resource resBeam = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Beam_" + ifcBeam.getExpressId());
+			resBeam.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcBeam.getName() != null ? ifcBeam.getName().getValue() : "Undefined" ));
+			resBeam.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+			resBeam.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Beam"));
+			// update parent
+			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resBeam);
 		}else if(product instanceof IfcRoof) {
 			IfcRoof ifcRoof = (IfcRoof) product;			
-			//
-			//
-			
+
 			// 1. hasOpenings
 			
 			
@@ -261,15 +272,19 @@ public class Converter {
 		if(relFillsElementIterator.hasNext()) {
 			IfcRelFillsElement relFillsElement = relFillsElementIterator.next();
 			if(relFillsElement.getRelatedBuildingElement() instanceof IfcDoor) {
-				IfcDoor door = (IfcDoor) relFillsElement.getRelatedBuildingElement();
-				//
-				//
-				
+				IfcDoor ifcDoor = (IfcDoor) relFillsElement.getRelatedBuildingElement();
+				Resource resDoor = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Door_" + ifcDoor.getExpressId());
+				resDoor.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  ifcDoor.getName() != null ? ifcDoor.getName().getValue() : "Undefined"  ));
+				resDoor.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+				resDoor.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Door"));
+				// update parent
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "hasSabElement"), resDoor);													
 			}else if(relFillsElement.getRelatedBuildingElement() instanceof IfcWindow) {				
-				IfcWindow window = (IfcWindow) relFillsElement.getRelatedBuildingElement();
-				//
-				//
-				
+				IfcWindow ifcWindow = (IfcWindow) relFillsElement.getRelatedBuildingElement();
+				Resource resWindow = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Window_" + ifcWindow.getExpressId());
+				resWindow.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  ifcWindow.getName() != null ? ifcWindow.getName().getValue() : "Undefined"  ));
+				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Window"));
 			}else {
 				log.warn("unsupported case");
 			}
