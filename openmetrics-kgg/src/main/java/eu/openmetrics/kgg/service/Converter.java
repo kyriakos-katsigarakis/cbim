@@ -45,10 +45,10 @@ public class Converter {
 	
 	public Converter() {
 		log.info("init ifc to knowledge graph converter");
-		rdfModel = ModelFactory.createDefaultModel();
 	}
 
-	public void convert(IfcModel ifcModel) {
+	public Model convert(IfcModel ifcModel) {
+		rdfModel = ModelFactory.createDefaultModel();
 		rdfModel.setNsPrefix("om", "http://openmetrics.eu/openmetrics#");
 		rdfModel.setNsPrefix("owl", "http://www.w3.org/2002/07/owl#");
 		rdfModel.setNsPrefix("rdf", RDF.uri);
@@ -97,6 +97,7 @@ public class Converter {
 				}
 			}
 		}
+		return rdfModel;
 	}
 	
 	private void parseBuilding(IfcBuilding building, Resource resSite) {
