@@ -12,7 +12,9 @@
 	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 		<header class="mb-auto">
 			<div>
-				<h3 class="float-md-start mb-0">OPENMETRICS</h3>
+				<!--
+				<h3 class="float-md-start mb-0"></h3>
+				-->
 				<nav class="nav nav-masthead justify-content-center float-md-end">
 					<a class="nav-link active" aria-current="page" href="#">Home</a> 
 					<a class="nav-link" href="#">About</a>
@@ -22,13 +24,16 @@
 		<main class="px-3">
 			<h1>Knowledge Graph Generator</h1>
 			<p class="lead">...</p>
-			<p class="lead">
-				<input type="file" class="form-control" id="customFile" />				
-			</p>
+			<form th:id="form-upload" th:action="@{'/upload'}" method="post" enctype="multipart/form-data">
+				<p class="lead"><input type="file" class="form-control" id="file" name="file"/></p>
+				<p class="lead"><button id="btn-form-upload" type="button" class="btn btn-light">Execute</button></p>
+			</form>
 		</main>
 		<footer class="mt-auto text-white-50">
 			<p>UCL IEDE</p>
 		</footer>
 	</div>
+	<script th:src="@{/assets/dist/js/jquery-3.6.0.min.js}"></script>
+	<script th:src="@{/assets/custom/js/custom.js}"></script>
 </body>
 </html>

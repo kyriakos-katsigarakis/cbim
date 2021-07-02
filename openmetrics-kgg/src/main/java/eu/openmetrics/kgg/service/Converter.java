@@ -81,7 +81,7 @@ public class Converter {
 							List<IfcObjectDefinition> siteRelatedObjectList = siteRelAggregatesIterator.next().getRelatedObjects();
 							for(IfcObjectDefinition siteRelatedObject : siteRelatedObjectList) {
 								if(siteRelatedObject instanceof IfcBuilding) {
-									IfcBuilding building = (IfcBuilding) projectRelatedObject;
+									IfcBuilding building = (IfcBuilding) siteRelatedObject;
 									parseBuilding(building, resSite);
 								}else {
 									log.warn("unsupported case");
