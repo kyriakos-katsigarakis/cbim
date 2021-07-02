@@ -104,12 +104,12 @@ public class Converter {
 		resBuilding.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  building.getName() != null ? building.getName().getValue() : "Undefined"  ));
 		resBuilding.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Building"));
 		resBuilding.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Building"));
-		// parent resource
+		// update parent
 		if(resSite != null) {
 			resSite.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasPart"), resBuilding);
 			resSite.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "hasBuilding"), resBuilding);				
 		}
-		// 1. using containedInSpatialStructure
+		// using containedInSpatialStructure
 		Iterator<IfcRelContainedInSpatialStructure> buildingContainedInSpatialStructureIterator = building.getContainsElements().iterator();
 		while(buildingContainedInSpatialStructureIterator.hasNext()) {
 			IfcRelContainedInSpatialStructure relContainedInSpatialStructure = buildingContainedInSpatialStructureIterator.next();
@@ -117,7 +117,7 @@ public class Converter {
 				parseProduct(product, resBuilding);
 			}
 		}
-		// 2. using decomposedBy
+		// using decomposedBy
 		Iterator<IfcRelAggregates> buildingRelAggregatesIterator = building.getIsDecomposedBy().iterator();
 		if(buildingRelAggregatesIterator.hasNext()) {
 			List<IfcObjectDefinition> buildingRelatedObjectList = buildingRelAggregatesIterator.next().getRelatedObjects();
