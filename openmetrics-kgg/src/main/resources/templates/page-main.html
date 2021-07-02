@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="en" class="h-100">
 <head>
+	<title>KGG</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
-	<title>KGG</title>
-	<link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/assets/custom/css/cover.css" rel="stylesheet">
+	<link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body class="d-flex h-100 text-center text-white bg-dark">
 	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -16,7 +17,7 @@
 				<h3 class="float-md-start mb-0"></h3>
 				-->
 				<nav class="nav nav-masthead justify-content-center float-md-end">
-					<a class="nav-link active" aria-current="page" href="#">Home</a> 
+					<a class="nav-link active" aria-current="page" href="/">Home</a> 
 					<a class="nav-link" href="#">About</a>
 				</nav>
 			</div>
@@ -24,13 +25,15 @@
 		<main class="px-3">
 			<h1>Knowledge Graph Generator</h1>
 			<p class="lead">...</p>
-			<form th:id="form-upload" th:action="@{'/upload'}" method="post" enctype="multipart/form-data">
-				<p class="lead"><input type="file" class="form-control" id="file" name="file"/></p>
-				<p class="lead"><button id="btn-form-upload" type="button" class="btn btn-light">Execute</button></p>
+			<form th:id="form-upload" th:action="@{'/upload'}" >
+				<p class="lead"><input type="file" title=" " class="form-control" id="file" name="file"/></p>    				
+				<p class="lead text-center">
+					<button id="btn-download" type="button" class="btn btn-success"><i class="fa fa-download"></i> TTL</button>
+				</p>
 			</form>
 		</main>
 		<footer class="mt-auto text-white-50">
-			<p>UCL IEDE</p>
+			<p>@UCL_IEDE</p>
 		</footer>
 	</div>
 	<script th:src="@{/assets/dist/js/jquery-3.6.0.min.js}"></script>
