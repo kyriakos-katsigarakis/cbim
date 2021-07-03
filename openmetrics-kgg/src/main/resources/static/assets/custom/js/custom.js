@@ -1,16 +1,19 @@
 $(document).ready(function () {
 
-   	$("#btn-download").hide();
-
 	$("#btn-download").click(function () {
 		location.href = '/download';
 	});
 
+	$("#file").click(function() {
+		$("#btn-download").css('display','none');
+		$("#file").removeClass("is-invalid");
+	});
+
     $("#file").on('change', function(event) {
 		event.preventDefault();
+		$("#btn-download").css('display','none');
         var form = $('#form-upload')[0];
         var data = new FormData(form);
-        $("#btn-form-upload").prop("disabled", true);
         $.ajax({
             type: "POST",
             enctype: "multipart/form-data",
@@ -20,14 +23,18 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             timeout: 600000,
+            beforeSend: function(data) {
+				$("#loading").css('display','block');
+			},
             success: function (data) {
+				$("#loading").css('display','none');
                 console.log(data);
                	if(data == "success"){
-	 				$("#btn-download").show();
+	 				$("#btn-download").css('display','block');
 				}else if(data == "failed_extension"){
-					
+					 $("#file").addClass("is-invalid");					
 				}else if(data == "failed_schema"){
-					
+					 $("#file").addClass("is-invalid");
 				}
                 $("#file").val(null);
             },
