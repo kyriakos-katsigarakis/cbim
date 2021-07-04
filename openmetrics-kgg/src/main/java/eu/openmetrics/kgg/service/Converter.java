@@ -198,9 +198,7 @@ public class Converter {
 				}else {
 					log.warn("unsupported case");
 				}
-			}
-			//for(IfcRelSpaceBoundary relSpaceBoundary : ifcWall.getProvidesBoundaries()) {
-			//}			
+			}		
 		}else if(product instanceof IfcWallStandardCase) {
 			IfcWallStandardCase ifcWallStandardCase = (IfcWallStandardCase) product;
 			Resource resWall = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcWallStandardCase.getExpressId());
@@ -376,7 +374,7 @@ public class Converter {
 			IfcRelFillsElement relFillsElement = relFillsElementIterator.next();
 			if(relFillsElement.getRelatedBuildingElement() instanceof IfcDoor) {
 				IfcDoor ifcDoor = (IfcDoor) relFillsElement.getRelatedBuildingElement();
-				Resource resDoor = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Door_" + ifcDoor.getExpressId());
+				Resource resDoor = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcDoor.getExpressId());
 				resDoor.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  ifcDoor.getName() != null ? ifcDoor.getName().getValue() : "Undefined"  ));
 				resDoor.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
 				resDoor.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Door"));	
@@ -427,7 +425,7 @@ public class Converter {
 				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "hasSabElement"), resDoor);													
 			}else if(relFillsElement.getRelatedBuildingElement() instanceof IfcWindow) {				
 				IfcWindow ifcWindow = (IfcWindow) relFillsElement.getRelatedBuildingElement();
-				Resource resWindow = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Window_" + ifcWindow.getExpressId());
+				Resource resWindow = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcWindow.getExpressId());
 				resWindow.addLiteral(RDFS.label, ResourceFactory.createStringLiteral(  ifcWindow.getName() != null ? ifcWindow.getName().getValue() : "Undefined"  ));
 				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
 				resWindow.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Window"));
