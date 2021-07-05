@@ -39,7 +39,8 @@ $(document).ready(function () {
                 $("#file").val(null);
             },
             error: function (e) {
-                console.log(e);
+                $("#loading").css('display','none');
+                $("#file").addClass("is-invalid");
             }
         });
 	});
