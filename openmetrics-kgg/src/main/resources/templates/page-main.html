@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" class="h-100">
 <head>
-	<title>KGG</title>
+	<title>Knowledge Graph Generator</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
-	<link href="/assets/custom/css/cover.css" rel="stylesheet">
+	<link th:href="@{/assets/custom/css/cover.css}" rel="stylesheet">
 	<link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 </head>
@@ -14,18 +14,24 @@
 		<header class="mb-auto">
 			<div>
 				<nav class="nav nav-masthead justify-content-center float-md-end">
-					<a class="nav-link active" aria-current="page" href="/">Home</a> 
+					<a class="nav-link active" aria-current="page" href="/">Home</a>
+					<a class="nav-link" href="https://github.com/kyriakos-katsigarakis/openmetrics">Examples</a>
 					<a class="nav-link" href="https://github.com/kyriakos-katsigarakis/openmetrics">GitHub</a>
 				</nav>
 			</div>
 		</header>
 		<main class="px-3">
 			<h1>Knowledge Graph Generator</h1>
-			<p class="lead">IFC to BOT,BEO,PROPS and BRICK</p>
+			<p class="lead">Convert IFC-SPF files to RDF triples applying the ontologies <br/>
+				<a class="link-info text-decoration-none" href="https://brickschema.org/ontology" target="_blank">BRICK</a>, 
+				<a class="link-info text-decoration-none" href="https://w3c-lbd-cg.github.io/bot/" target="_blank">BOT</a>, 
+				<a class="link-info text-decoration-none" href="https://pi.pauwel.be/voc/buildingelement/index-en.html" target="_blank">BEO</a> and 
+				<a class="link-info text-decoration-none" href="#">PROPS</a>.</p>
+				<p class="text-secondary"><small>This version supports only the IFC4 schema</small></p>
 			<form th:id="form-upload" th:action="@{'/upload'}">
 				<p class="lead">
 					<input type="file" title=" " class="form-control" id="file" name="file"/>
-				</p>    				
+				</p>
 				<div class="d-flex justify-content-center">
 					<div id="loading" style="display:none;"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
 					<button id="btn-download" type="button" class="btn btn-success" style="display:none;"><i class="fa fa-download"></i> TTL</button>
@@ -33,7 +39,7 @@
 			</form>
 		</main>
 		<footer class="mt-auto text-white-50">
-			<p>@UCL_IEDE</p>
+			<p><a class="link-secondary text-decoration-none" href="https://www.ucl.ac.uk/bartlett/environmental-design/" target="_blank">UCL IEDE</a></p>
 		</footer>
 	</div>
 	<script th:src="@{/assets/dist/js/jquery-3.6.0.min.js}"></script>

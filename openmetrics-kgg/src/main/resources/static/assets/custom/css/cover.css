@@ -44,6 +44,22 @@ body {
 	border-bottom-color: #fff;
 }
 
+
+.lnk {
+	color: #999999;
+	text-decoration: none;
+}
+
+.lnk:hover {
+	color: green;
+	text-decoration: none;
+}
+
+.lnk:visited {
+	color: #f1f1f1;
+	text-decoration: none;
+}
+
 /*
  * Background
  */
