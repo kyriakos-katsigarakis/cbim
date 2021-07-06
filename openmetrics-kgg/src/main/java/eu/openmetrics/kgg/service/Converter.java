@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL;
@@ -21,6 +23,7 @@ import gr.tuc.ifc4.IfcBuildingStorey;
 import gr.tuc.ifc4.IfcColumn;
 import gr.tuc.ifc4.IfcDoor;
 import gr.tuc.ifc4.IfcElement;
+import gr.tuc.ifc4.IfcIdentifier;
 import gr.tuc.ifc4.IfcObjectDefinition;
 import gr.tuc.ifc4.IfcOpeningElement;
 import gr.tuc.ifc4.IfcProduct;
@@ -43,6 +46,10 @@ import gr.tuc.ifc4.IfcSite;
 import gr.tuc.ifc4.IfcSlab;
 import gr.tuc.ifc4.IfcSpace;
 import gr.tuc.ifc4.IfcSpaceBoundarySelect;
+import gr.tuc.ifc4.IfcUnitaryControlElement;
+import gr.tuc.ifc4.IfcUnitaryControlElementTypeEnum;
+import gr.tuc.ifc4.IfcUnitaryEquipment;
+import gr.tuc.ifc4.IfcUnitaryEquipmentTypeEnum;
 import gr.tuc.ifc4.IfcValue;
 import gr.tuc.ifc4.IfcVolumeMeasure;
 import gr.tuc.ifc4.IfcWall;
@@ -73,45 +80,48 @@ public class Converter {
 		rdfModel.setNsPrefix("bot", "https://w3id.org/bot#");
 		rdfModel.setNsPrefix("beo", "https://pi.pauwel.be/voc/buildingelement#");
 		rdfModel.setNsPrefix("props", "https://w3id.org/props#");
-
 		Iterator<IfcProject> projectIterator = ifcModel.getAllE(IfcProject.class).iterator();
-		if(projectIterator.hasNext()){
+		if(projectIterator.hasNext()) {
 			IfcProject ifcProject = projectIterator.next();
-			//
-			Iterator<IfcRelAggregates> projectRelAggregatesIterator = ifcProject.getIsDecomposedBy().iterator();
-			if(projectRelAggregatesIterator.hasNext()) {
-				List<IfcObjectDefinition> projectRelatedObjectList = projectRelAggregatesIterator.next().getRelatedObjects();
-				for(IfcObjectDefinition projectRelatedObject : projectRelatedObjectList) {
-					if(projectRelatedObject instanceof IfcSite) {
-						IfcSite ifcSite = (IfcSite) projectRelatedObject;
-						//
-						Resource resSite =  rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Site_" + ifcSite.getExpressId());
-						resSite.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Site"));
-						resSite.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Location"));
-						resSite.addProperty(RDFS.label, ResourceFactory.createStringLiteral(   ifcSite.getName() != null ? ifcSite.getName().getValue() : "Undefined"  ));
-						resSite.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcSite.getGlobalId().getValue() ));
-						Iterator<IfcRelAggregates> siteRelAggregatesIterator = ifcSite.getIsDecomposedBy().iterator();
-						if(siteRelAggregatesIterator.hasNext()) {
-							List<IfcObjectDefinition> siteRelatedObjectList = siteRelAggregatesIterator.next().getRelatedObjects();
-							for(IfcObjectDefinition siteRelatedObject : siteRelatedObjectList) {
-								if(siteRelatedObject instanceof IfcBuilding) {
-									IfcBuilding building = (IfcBuilding) siteRelatedObject;
-									parseBuilding(building, resSite);
-								}else {
-									log.warn("unsupported case");
-								}
+			parseProject(ifcProject);
+		}
+		return rdfModel;
+	}
+	
+	private void parseProject(IfcProject ifcProject) {
+		Iterator<IfcRelAggregates> projectRelAggregatesIterator = ifcProject.getIsDecomposedBy().iterator();
+		while(projectRelAggregatesIterator.hasNext()) {
+			IfcRelAggregates projectRelAggregates = projectRelAggregatesIterator.next();
+			List<IfcObjectDefinition> projectRelatedObjectList = projectRelAggregates.getRelatedObjects();
+			for(IfcObjectDefinition projectRelatedObject : projectRelatedObjectList) {
+				if(projectRelatedObject instanceof IfcSite) {
+					IfcSite ifcSite = (IfcSite) projectRelatedObject;
+					Resource resSite =  rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Site_" + ifcSite.getExpressId());
+					resSite.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Site"));
+					resSite.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Location"));
+					resSite.addProperty(RDFS.label, ResourceFactory.createStringLiteral(   ifcSite.getName() != null ? ifcSite.getName().getValue() : "Undefined"  ));
+					resSite.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcSite.getGlobalId().getValue() ));
+					Iterator<IfcRelAggregates> siteRelAggregatesIterator = ifcSite.getIsDecomposedBy().iterator();
+					while(siteRelAggregatesIterator.hasNext()) {
+						IfcRelAggregates siteRelAggregates = siteRelAggregatesIterator.next();
+						List<IfcObjectDefinition> siteRelatedObjectList = siteRelAggregates.getRelatedObjects();
+						for(IfcObjectDefinition siteRelatedObject : siteRelatedObjectList) {
+							if(siteRelatedObject instanceof IfcBuilding) {
+								IfcBuilding building = (IfcBuilding) siteRelatedObject;
+								parseBuilding(building, resSite);
+							}else {
+								log.warn("unsupported case");
 							}
 						}
-					}else if (projectRelatedObject instanceof IfcBuilding) {
-						IfcBuilding building = (IfcBuilding) projectRelatedObject;
-						parseBuilding(building, null);					
-					}else {
-						log.warn("usupported case");
 					}
+				}else if (projectRelatedObject instanceof IfcBuilding) {
+					IfcBuilding building = (IfcBuilding) projectRelatedObject;
+					parseBuilding(building, null);					
+				}else {
+					log.warn("usupported case");
 				}
 			}
 		}
-		return rdfModel;
 	}
 	
 	private void parseBuilding(IfcBuilding building, Resource resSite) {
@@ -135,8 +145,9 @@ public class Converter {
 		}
 		// using decomposedBy
 		Iterator<IfcRelAggregates> buildingRelAggregatesIterator = building.getIsDecomposedBy().iterator();
-		if(buildingRelAggregatesIterator.hasNext()) {
-			List<IfcObjectDefinition> buildingRelatedObjectList = buildingRelAggregatesIterator.next().getRelatedObjects();
+		while(buildingRelAggregatesIterator.hasNext()) {
+			IfcRelAggregates buildingRelAggregates = buildingRelAggregatesIterator.next();
+			List<IfcObjectDefinition> buildingRelatedObjectList = buildingRelAggregates.getRelatedObjects();
 			for(IfcObjectDefinition builidngRelatedObject : buildingRelatedObjectList) {
 				if(builidngRelatedObject instanceof IfcBuildingStorey) {
 					IfcBuildingStorey buildingStorey = (IfcBuildingStorey) builidngRelatedObject;
@@ -152,8 +163,9 @@ public class Converter {
 					resBuilding.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasPart"), resStorey);
 					// using decomposedBy
 					Iterator<IfcRelAggregates> buildingStoreyRelAggregatesIterator = buildingStorey.getIsDecomposedBy().iterator(); 
-					if(buildingStoreyRelAggregatesIterator.hasNext()) {
-						List<IfcObjectDefinition> buildingStoreyRelatedObjectList = buildingStoreyRelAggregatesIterator.next().getRelatedObjects();
+					while(buildingStoreyRelAggregatesIterator.hasNext()) {
+						IfcRelAggregates buildingStoreyRelAggregates = buildingStoreyRelAggregatesIterator.next();
+						List<IfcObjectDefinition> buildingStoreyRelatedObjectList = buildingStoreyRelAggregates.getRelatedObjects();
 						for(IfcObjectDefinition buildingStoreyRelatedObject : buildingStoreyRelatedObjectList) {
 							if(buildingStoreyRelatedObject instanceof IfcProduct) {
 								IfcProduct product = (IfcProduct) buildingStoreyRelatedObject;					
@@ -189,7 +201,7 @@ public class Converter {
 			// upd parent
 			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resWall);
 			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcWall.getHasOpenings().iterator();
-			if(wallOpeningIterator.hasNext()) {
+			while(wallOpeningIterator.hasNext()) {
 				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
 				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
@@ -208,7 +220,7 @@ public class Converter {
 			// upd parent
 			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resWall);
 			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcWallStandardCase.getHasOpenings().iterator();
-			if(wallOpeningIterator.hasNext()) {
+			while(wallOpeningIterator.hasNext()) {
 				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
 				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
@@ -227,7 +239,7 @@ public class Converter {
 			// upd parent
 			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resSlab);
 			Iterator<IfcRelVoidsElement> wallOpeningIterator = ifcSlab.getHasOpenings().iterator();
-			if(wallOpeningIterator.hasNext()) {
+			while(wallOpeningIterator.hasNext()) {
 				IfcRelVoidsElement relVoidsElement = wallOpeningIterator.next();
 				if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 					IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
@@ -251,7 +263,7 @@ public class Converter {
 			parsePsets(ifcSpace, resSpace);
 			// zones
 			Iterator<IfcRelAssigns> spaceAssignmentIterator = ifcSpace.getHasAssignments().iterator();
-			if(spaceAssignmentIterator.hasNext()) {
+			while(spaceAssignmentIterator.hasNext()) {
 				IfcRelAssigns relAssigns = spaceAssignmentIterator.next();
 				if(relAssigns instanceof IfcRelAssignsToGroup) {
 					IfcRelAssignsToGroup relAssignsToGroup = (IfcRelAssignsToGroup) relAssigns;
@@ -292,6 +304,14 @@ public class Converter {
 					}
 				}
 			}
+			// products included in the space
+			Iterator<IfcRelContainedInSpatialStructure> buildingContainedInSpatialStructureIterator = ifcSpace.getContainsElements().iterator();
+			while(buildingContainedInSpatialStructureIterator.hasNext()) {
+				IfcRelContainedInSpatialStructure relContainedInSpatialStructure = buildingContainedInSpatialStructureIterator.next();
+				for(IfcProduct spaceProduct : relContainedInSpatialStructure.getRelatedElements()) {					
+					parseProduct(spaceProduct, resSpace);
+				}
+			}	
 		}else if(product instanceof IfcColumn) {
 			IfcColumn ifcColumn = (IfcColumn) product;
 			Resource resColumn = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcColumn.getExpressId());
@@ -322,7 +342,7 @@ public class Converter {
 				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resRoof);
 				// openings
 				Iterator<IfcRelVoidsElement> roofOpeningIterator = ifcRoof.getHasOpenings().iterator();
-				if(roofOpeningIterator.hasNext()) {
+				while(roofOpeningIterator.hasNext()) {
 					IfcRelVoidsElement relVoidsElement = roofOpeningIterator.next();
 					if(relVoidsElement.getRelatedOpeningElement() instanceof IfcOpeningElement) {
 						IfcOpeningElement opening = (IfcOpeningElement) relVoidsElement.getRelatedOpeningElement();
@@ -333,8 +353,9 @@ public class Converter {
 				}
 			}else { // isDecomposedBy
 				Iterator<IfcRelAggregates> roofRelAggregatesIterator = ifcRoof.getIsDecomposedBy().iterator();
-				if(roofRelAggregatesIterator.hasNext()) {
-					List<IfcObjectDefinition> roofRelatedObjectList = roofRelAggregatesIterator.next().getRelatedObjects();
+				while(roofRelAggregatesIterator.hasNext()) {
+					IfcRelAggregates roofRelAggregates = roofRelAggregatesIterator.next();
+					List<IfcObjectDefinition> roofRelatedObjectList = roofRelAggregates.getRelatedObjects();
 					for(IfcObjectDefinition roofRelatedObject : roofRelatedObjectList) {
 						if(roofRelatedObject instanceof IfcProduct){
 							IfcProduct subProduct = (IfcProduct) roofRelatedObject;
@@ -342,6 +363,48 @@ public class Converter {
 						}
 					}
 				}
+			}
+		}else if(product instanceof IfcUnitaryEquipment) {
+			IfcUnitaryEquipment ifcUnitaryEquipment = (IfcUnitaryEquipment) product;
+			if(ifcUnitaryEquipment.getPredefinedType().equals(IfcUnitaryEquipmentTypeEnum.SPLITSYSTEM)) {
+				Resource resSplitSystem = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcUnitaryEquipment.getExpressId());
+				resSplitSystem.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcUnitaryEquipment.getName() != null ? ifcUnitaryEquipment.getName().getValue() : "Undefined" ));
+				resSplitSystem.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+				resSplitSystem.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Terminal_Unit"));
+				resSplitSystem.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcUnitaryEquipment.getGlobalId().getValue() ));
+				// upd parent
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasLocation"), resSplitSystem);
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resSplitSystem);			
+				// query
+				NodeIterator nodeIterator = rdfModel.listObjectsOfProperty(resParent, ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "isPartOf") );
+				if(nodeIterator.hasNext()) {
+					RDFNode rdfNode = nodeIterator.next();
+					Resource resource = rdfNode.asResource();
+					if(resource.hasProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Zone"))) {						
+						resSplitSystem.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "feeds"), resource);
+						resource.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "isFedBy"), resSplitSystem);
+					}
+				}
+				// add psets
+				parsePsets(ifcUnitaryEquipment, resSplitSystem);
+			}else {
+				log.warn("unsupported case");
+			}
+		}else if(product instanceof IfcUnitaryControlElement) {
+			IfcUnitaryControlElement ifcUnitaryControlElement = (IfcUnitaryControlElement) product;				
+			if(ifcUnitaryControlElement.getPredefinedType().equals(IfcUnitaryControlElementTypeEnum.THERMOSTAT)) {
+				Resource resControlPanel = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcUnitaryControlElement.getExpressId());
+				resControlPanel.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getName() != null ? ifcUnitaryControlElement.getName().getValue() : "Undefined" ));
+				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
+				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Thermostat"));
+				resControlPanel.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getGlobalId().getValue() ));
+				// upd parent
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasLocation"), resControlPanel);
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resControlPanel);
+				// add psets
+				parsePsets(ifcUnitaryControlElement, resControlPanel);
+			}else {
+				log.warn("unsupported case");
 			}
 		}
 	}
@@ -416,6 +479,24 @@ public class Converter {
 							if(ifcValue instanceof IfcVolumeMeasure) {
 								IfcVolumeMeasure ifcMeasure = (IfcVolumeMeasure) ifcValue;
 								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasVolume"),  ResourceFactory.createTypedLiteral(ifcMeasure.getValue()));
+							}
+						}else if(propertySignleValue.getName().getValue().equalsIgnoreCase("SerialNumber")) {
+							IfcValue ifcValue = propertySignleValue.getNominalValue();
+							if(ifcValue instanceof IfcIdentifier) {
+								IfcIdentifier ifcIdentifier = (IfcIdentifier) ifcValue;
+								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasSerialNumber"),  ResourceFactory.createStringLiteral(ifcIdentifier.getValue()));
+							}
+						}else if(propertySignleValue.getName().getValue().equalsIgnoreCase("COP")) {
+							IfcValue ifcValue = propertySignleValue.getNominalValue();
+							if(ifcValue instanceof IfcReal) {
+								IfcReal ifcMeasure = (IfcReal) ifcValue;
+								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCOP"),  ResourceFactory.createTypedLiteral(ifcMeasure.getValue()));
+							}
+						}else if(propertySignleValue.getName().getValue().equalsIgnoreCase("EER")) {
+							IfcValue ifcValue = propertySignleValue.getNominalValue();
+							if(ifcValue instanceof IfcReal) {
+								IfcReal ifcMeasure = (IfcReal) ifcValue;
+								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasEER"),  ResourceFactory.createTypedLiteral(ifcMeasure.getValue()));
 							}
 						}
 					}
