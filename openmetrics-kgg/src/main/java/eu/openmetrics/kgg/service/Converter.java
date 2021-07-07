@@ -367,7 +367,8 @@ public class Converter {
 		}else if(product instanceof IfcUnitaryEquipment) {
 			IfcUnitaryEquipment ifcUnitaryEquipment = (IfcUnitaryEquipment) product;
 			if(ifcUnitaryEquipment.getPredefinedType().equals(IfcUnitaryEquipmentTypeEnum.SPLITSYSTEM)) {
-				Resource resSplitSystem = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcUnitaryEquipment.getExpressId());
+				String deviceId = getDeviceIdentifier(ifcUnitaryEquipment);
+				Resource resSplitSystem = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + (deviceId != null ? "Device_" + deviceId : "Element_" + ifcUnitaryEquipment.getExpressId() ));
 				resSplitSystem.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcUnitaryEquipment.getName() != null ? ifcUnitaryEquipment.getName().getValue() : "Undefined" ));
 				resSplitSystem.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
 				resSplitSystem.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Terminal_Unit"));
@@ -391,9 +392,10 @@ public class Converter {
 				log.warn("unsupported case");
 			}
 		}else if(product instanceof IfcUnitaryControlElement) {
-			IfcUnitaryControlElement ifcUnitaryControlElement = (IfcUnitaryControlElement) product;				
+			IfcUnitaryControlElement ifcUnitaryControlElement = (IfcUnitaryControlElement) product;		
+			String deviceId = getDeviceIdentifier(ifcUnitaryControlElement);
 			if(ifcUnitaryControlElement.getPredefinedType().equals(IfcUnitaryControlElementTypeEnum.THERMOSTAT)) {
-				Resource resControlPanel = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcUnitaryControlElement.getExpressId());
+				Resource resControlPanel = rdfModel.createResource( rdfModel.getNsPrefixURI("om") + (deviceId != null ? "Device_" + deviceId : "Element_" + ifcUnitaryControlElement.getExpressId()) );
 				resControlPanel.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getName() != null ? ifcUnitaryControlElement.getName().getValue() : "Undefined" ));
 				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
 				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Thermostat"));
@@ -438,7 +440,7 @@ public class Converter {
 			}
 		}
 	}
-	
+
 	void parsePsets(IfcProduct ifcProduct, Resource resProduct) {
 		Iterator<IfcRelDefinesByProperties> windowRelDefinesByProperties = ifcProduct.getIsDefinedBy().iterator();
 		while(windowRelDefinesByProperties.hasNext()) {
@@ -505,5 +507,30 @@ public class Converter {
 				log.warn("unsupported case");
 			}
 		}
+	}
+
+	private String getDeviceIdentifier(IfcProduct ifcProduct) {
+		Iterator<IfcRelDefinesByProperties> windowRelDefinesByProperties = ifcProduct.getIsDefinedBy().iterator();
+		while(windowRelDefinesByProperties.hasNext()) {
+			IfcRelDefinesByProperties relDefinesByProperties = windowRelDefinesByProperties.next();
+			if(relDefinesByProperties.getRelatingPropertyDefinition() instanceof IfcPropertySet) {
+				IfcPropertySet propertySet = (IfcPropertySet) relDefinesByProperties.getRelatingPropertyDefinition();
+				Iterator<IfcProperty> propertiesIterator = propertySet.getHasProperties().iterator();
+				while(propertiesIterator.hasNext()) {
+					IfcProperty ifcProperty = propertiesIterator.next();
+					if(ifcProperty instanceof IfcPropertySingleValue) {
+						IfcPropertySingleValue propertySignleValue = (IfcPropertySingleValue) ifcProperty;
+						if(propertySignleValue.getName().getValue().equalsIgnoreCase("SerialNumber")) {
+						IfcValue ifcValue = propertySignleValue.getNominalValue();
+						if(ifcValue instanceof IfcIdentifier) {
+							IfcIdentifier ifcIdentifier = (IfcIdentifier) ifcValue;
+								return ifcIdentifier.getValue();
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 }
