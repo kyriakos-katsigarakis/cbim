@@ -20,26 +20,27 @@
 				</nav>
 			</div>
 		</header>
-		<main class="px-3">
+		<main class="px-3" style="margin-bottom:200px;">
 			<h1>Knowledge Graph Generator</h1>
-			<p class="lead">Convert IFC files to RDF triples applying the ontologies <br/>
+			<p class="lead">Convert IFC data to RDF triples applying the ontologies <br/>
 				<a class="link-info text-decoration-none" href="https://brickschema.org/ontology" target="_blank">BRICK</a>, 
 				<a class="link-info text-decoration-none" href="https://w3c-lbd-cg.github.io/bot/" target="_blank">BOT</a>, 
 				<a class="link-info text-decoration-none" href="https://pi.pauwel.be/voc/buildingelement/index-en.html" target="_blank">BEO</a> and 
-				<a class="link-info text-decoration-none" href="#">PROPS</a>.</p>
-				<p class="text-secondary"><small>This version supports only the IFC4 schema</small></p>
+				<a class="link-info text-decoration-none" href="#">PROPS</a>.
+			</p>
+			<p class="text-secondary"><small>This version supports the <a class="link-secondary text-decoration-none" href="https://standards.buildingsmart.org/IFC/RELEASE/IFC4/ADD2_TC1/HTML/" target="_blank">IFC4</a> specification</small></p>
 			<form th:id="form-upload" th:action="@{'/upload'}">
 				<p class="lead">
 					<input type="file" title=" " class="form-control" id="file" name="file"/>
 				</p>
 				<div class="d-flex justify-content-center">
-					<div id="loading" style="display:none;"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+					<div id="loading" style="display:none;"><i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i></div>
 					<button id="btn-download" type="button" class="btn btn-success" style="display:none;"><i class="fa fa-download"></i> TTL</button>
 				</div>
 			</form>
 		</main>
-		<footer class="mt-auto text-white-50">
-			<p><a class="link-secondary text-decoration-none" href="https://www.ucl.ac.uk/bartlett/environmental-design/" target="_blank">UCL IEDE</a></p>
+		<footer class="mt-auto text-white-100">
+			<p class="text-secondary"><small>Version 0.2.0</small></p>
 		</footer>
 	</div>
 	<script th:src="@{/assets/dist/js/jquery-3.6.0.min.js}"></script>
