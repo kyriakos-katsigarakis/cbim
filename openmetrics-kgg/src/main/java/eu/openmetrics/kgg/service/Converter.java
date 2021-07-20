@@ -234,7 +234,7 @@ public class Converter {
 			Resource resSlab = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "Element_" + ifcSlab.getExpressId());
 			resSlab.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcSlab.getName() != null ? ifcSlab.getName().getValue() : "Undefined" ));
 			resSlab.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("bot") + "Element"));
-			resSlab.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Wall"));
+			resSlab.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("beo") + "Slab"));
 			resSlab.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcSlab.getGlobalId().getValue() ));
 			// upd parent
 			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("bot") + "containsElement"), resSlab);
