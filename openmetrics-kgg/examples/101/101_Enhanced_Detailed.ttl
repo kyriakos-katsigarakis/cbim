@@ -2843,7 +2843,7 @@ om:TimeseriesReference_TUC_245_77_R80
         brick:hasTimeseriesId  "TUC.245.77.R80" .
 
 om:Building_140  a               brick:Building , bot:Building ;
-        rdfs:label               "" ;
+        rdfs:label               "H3A" ;
         brick:hasPart            om:BuildingStorey_177 , om:BuildingStorey_171 , om:BuildingStorey_159 , om:BuildingStorey_165 ;
         bot:hasStorey            om:BuildingStorey_159 , om:BuildingStorey_165 , om:BuildingStorey_177 , om:BuildingStorey_171 ;
         props:hasCompressedGuid  "0a0u_yaVr91RamT04O09sz" .
