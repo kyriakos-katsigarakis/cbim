@@ -71,7 +71,7 @@ public class MainController {
 		String fileName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
 		String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 		String fileNameWithExtension = FilenameUtils.getName(multipartFile.getOriginalFilename());
-		if(fileExtension.equalsIgnoreCase("ifc")){
+		if(fileExtension.equalsIgnoreCase("ifc")) {
 			httpSession.setAttribute("fileName", fileName);	
 			Path folderPath = Paths.get(directory).toAbsolutePath().normalize();
 			Files.createDirectories(folderPath);
