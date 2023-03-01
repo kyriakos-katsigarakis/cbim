@@ -1,0 +1,376 @@
+@prefix schema: <http://schema.org#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix saref: <http://w3id.irg/saref#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+@prefix om:    <http://openmetrics.eu/openmetrics#> .
+@prefix props: <https://w3id.org/props#> .
+
+om:Zone_62878  a       brick:Zone ;
+        rdfs:label     "A4:453260" ;
+        brick:hasPart  om:Space_6567 , om:Space_6037 .
+
+om:Zone_63104  a       brick:Zone ;
+        rdfs:label     "I2:453263" ;
+        brick:hasPart  om:Space_960 , om:Space_783 .
+
+om:Space_7094  a                 brick:Space ;
+        rdfs:label               "ROOM_B6" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "197.206926149282"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pW" .
+
+om:Space_4953  a                 brick:Space ;
+        rdfs:label               "ROOM_A2" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "169.55888432089"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oU" .
+
+om:BuildingStorey_161
+        a                        brick:Storey ;
+        rdfs:label               "Level 0" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT07d$s9I" .
+
+om:Zone_62803  a       brick:Zone ;
+        rdfs:label     "A3:453259" ;
+        brick:hasPart  om:Space_6399 , om:Space_6220 .
+
+om:Space_4382  a                 brick:Space ;
+        rdfs:label               "SHAFT_0_1" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "32.0733691297309"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2ra" .
+
+om:Space_6903  a                 brick:Space ;
+        rdfs:label               "SHAFT_1_1" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "32.0975879281685"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pZ" .
+
+om:Space_2967  a                 brick:Space ;
+        rdfs:label               "Shaft_2_0" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "28.6377388302103"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qV" .
+
+om:Space_4766  a                 brick:Space ;
+        rdfs:label               "ROOM_A1" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "228.774638476962"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oV" .
+
+om:Space_1307  a                 brick:Space ;
+        rdfs:label               "SHAFT_0_0" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "28.6377388302103"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4X" .
+
+om:Zone_62352  a       brick:Zone ;
+        rdfs:label     "B5:453252" ;
+        brick:hasPart  om:Space_3320 , om:Space_3154 .
+
+om:Space_6399  a                 brick:Space ;
+        rdfs:label               "WC_A3" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "40.9228427269307"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pc" .
+
+om:Zone_63329  a       brick:Zone ;
+        rdfs:label     "I5:453266" ;
+        brick:hasPart  om:Space_1664 , om:Space_1498 .
+
+om:BuildingStorey_179
+        a                        brick:Storey ;
+        rdfs:label               "Level 3" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT07d_WDz" .
+
+om:Zone_62017  a       brick:Zone ;
+        rdfs:label     "Default:134083" ;
+        brick:hasPart  om:Space_6735 , om:Space_4201 , om:Space_5483 , om:Space_6903 , om:Space_7652 , om:Space_1307 , om:Space_2967 , om:Space_4382 , om:Space_7818 .
+
+om:BuildingStorey_173
+        a                        brick:Storey ;
+        rdfs:label               "Level 2" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT07d_WBi" .
+
+om:Space_5844  a                 brick:Space ;
+        rdfs:label               "WC_A5" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "31.9830710106477"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oP" .
+
+om:Space_3320  a                 brick:Space ;
+        rdfs:label               "WC_B5" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "31.9830710106477"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qT" .
+
+om:Space_3154  a                 brick:Space ;
+        rdfs:label               "ROOM_B5" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "193.585724523395"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qU" .
+
+om:Space_4573  a                 brick:Space ;
+        rdfs:label               "ROOM_A6" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "197.206926149282"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oG" .
+
+om:Zone_62203  a       brick:Zone ;
+        rdfs:label     "B1:453250" ;
+        brick:hasPart  om:Space_7283 .
+
+om:Space_2618  a                 brick:Space ;
+        rdfs:label               "WC_B2" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "48.7451026991137"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qH" .
+
+om:Space_5132  a                 brick:Space ;
+        rdfs:label               "WC_A2" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "48.7451026991137"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oT" .
+
+om:Zone_62577  a       brick:Zone ;
+        rdfs:label     "A6:453256" ;
+        brick:hasPart  om:Space_5300 , om:Space_4573 .
+
+om:Zone_62728  a       brick:Zone ;
+        rdfs:label     "A2:453258" ;
+        brick:hasPart  om:Space_5132 , om:Space_4953 .
+
+om:Space_6037  a                 brick:Space ;
+        rdfs:label               "ROOM_A4" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "200.309552506286"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oO" .
+
+om:Zone_62502  a       brick:Zone ;
+        rdfs:label     "B3:453254" ;
+        brick:hasPart  om:Space_3869 , om:Space_3692 .
+
+om:Space_598  a                  brick:Space ;
+        rdfs:label               "ROOM_I1" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "228.774638476962"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4f" .
+
+om:Zone_62277  a       brick:Zone ;
+        rdfs:label     "B2:453251" ;
+        brick:hasPart  om:Space_7468 , om:Space_2618 .
+
+om:BuildingStorey_157
+        a                        brick:Storey ;
+        rdfs:label               "Level -1" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT07d_Zq5" .
+
+om:Space_6735  a                 brick:Space ;
+        rdfs:label               "CORRIDOR_A" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "170.120219535837"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pa" .
+
+om:Space_2786  a                 brick:Space ;
+        rdfs:label               "WC_B6" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "26.2696882401829"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qG" .
+
+om:Space_3511  a                 brick:Space ;
+        rdfs:label               "ROOM_B4" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "200.309552506286"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qS" .
+
+om:Zone_63028  a       brick:Zone ;
+        rdfs:label     "I1:453262" ;
+        brick:hasPart  om:Space_598 .
+
+om:Space_1126  a                 brick:Space ;
+        rdfs:label               "WC_I6" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "26.2696882401829"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4l" .
+
+om:Space_7468  a                 brick:Space ;
+        rdfs:label               "ROOM_B2" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "169.55888432089"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pk" .
+
+om:Space_2040  a                 brick:Space ;
+        rdfs:label               "ROOM_I3" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "184.29615694808"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4G" .
+
+om:Zone_62122  a       brick:Zone ;
+        rdfs:label     "B6:453249" ;
+        brick:hasPart  om:Space_7094 , om:Space_2786 .
+
+om:Space_7283  a                 brick:Space ;
+        rdfs:label               "ROOM_B1" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "228.774638476962"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pl" .
+
+om:Zone_62427  a       brick:Zone ;
+        rdfs:label     "B4:453253" ;
+        brick:hasPart  om:Space_4035 , om:Space_3511 .
+
+om:Space_5676  a                 brick:Space ;
+        rdfs:label               "ROOM_A5" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "192.856982977371"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oQ" .
+
+om:Site_243  a                   brick:Site ;
+        rdfs:label               "Surface:440560" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT04O09s_" .
+
+om:Space_2217  a                 brick:Space ;
+        rdfs:label               "WC_I3" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "40.9228427269307"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4L" .
+
+om:Space_3692  a                 brick:Space ;
+        rdfs:label               "ROOM_B3" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "184.29615694808"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qR" .
+
+om:Space_783  a                  brick:Space ;
+        rdfs:label               "ROOM_I2" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "169.55888432089"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4h" .
+
+om:Space_2409  a                 brick:Space ;
+        rdfs:label               "WC_I4" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "27.3079033159177"^^xsd:double ;
+        props:hasCompressedGuid  "1raecK5JTC_PHIQqeF3yM2" .
+
+om:Space_7818  a                 brick:Space ;
+        rdfs:label               "Shaft_2_1" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "32.0975879281685"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pp" .
+
+om:Space_3869  a                 brick:Space ;
+        rdfs:label               "WC_B3" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "40.9228427269307"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qQ" .
+
+om:Zone_62654  a       brick:Zone ;
+        rdfs:label     "A1:453257" ;
+        brick:hasPart  om:Space_4766 .
+
+om:Space_1857  a                 brick:Space ;
+        rdfs:label               "ROOM_I4" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "200.321201602705"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4S" .
+
+om:Zone_63254  a       brick:Zone ;
+        rdfs:label     "I4:453265" ;
+        brick:hasPart  om:Space_2409 , om:Space_1857 .
+
+om:Space_5483  a                 brick:Space ;
+        rdfs:label               "SHAFT_1_0" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "28.6377388302103"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oR" .
+
+om:Building_142  a               brick:Building ;
+        rdfs:label               "" ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT04O09sz" .
+
+om:Zone_62953  a       brick:Zone ;
+        rdfs:label     "A5:453261" ;
+        brick:hasPart  om:Space_5844 , om:Space_5676 .
+
+om:Space_6567  a                 brick:Space ;
+        rdfs:label               "WC_A4" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "27.3079033159177"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pb" .
+
+om:Space_1664  a                 brick:Space ;
+        rdfs:label               "WC_I5" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "31.9830710106477"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4O" .
+
+om:Space_1498  a                 brick:Space ;
+        rdfs:label               "ROOM_I5" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "192.865280752443"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4c" .
+
+om:Space_347  a                  brick:Space ;
+        rdfs:label               "ROOM_I6" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "197.206926149282"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4t" .
+
+om:Space_4201  a                 brick:Space ;
+        rdfs:label               "CORRIDOR_I" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "170.120219535837"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2rc" .
+
+om:Space_4035  a                 brick:Space ;
+        rdfs:label               "WC_B4" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "27.3079033159177"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2qP" .
+
+om:Zone_63404  a       brick:Zone ;
+        rdfs:label     "I6:453267" ;
+        brick:hasPart  om:Space_1126 , om:Space_347 .
+
+om:Space_5300  a                 brick:Space ;
+        rdfs:label               "WC_A6" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "26.2696882401829"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2oS" .
+
+om:Space_6220  a                 brick:Space ;
+        rdfs:label               "ROOM_A3" ;
+        brick:hasLocation        om:BuildingStorey_167 ;
+        props:hasArea            "184.29615694808"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pd" .
+
+om:Zone_63179  a       brick:Zone ;
+        rdfs:label     "I3:453264" ;
+        brick:hasPart  om:Space_2217 , om:Space_2040 .
+
+om:BuildingStorey_167
+        a                        brick:Storey ;
+        rdfs:label               "Level 1" ;
+        brick:hasLocation        om:Building_142 ;
+        props:hasCompressedGuid  "0a0u_yaVr91RamT07d$qIM" .
+
+om:Space_960  a                  brick:Space ;
+        rdfs:label               "WC_I2" ;
+        brick:hasLocation        om:BuildingStorey_161 ;
+        props:hasArea            "48.7451026991137"^^xsd:double ;
+        props:hasCompressedGuid  "3kT8I8pp95QAZ7pLPg6v4j" .
+
+om:Space_7652  a                 brick:Space ;
+        rdfs:label               "CORRIDOR_B" ;
+        brick:hasLocation        om:BuildingStorey_173 ;
+        props:hasArea            "170.120219535837"^^xsd:double ;
+        props:hasCompressedGuid  "04fvfeI2P3MOmu2cRam2pq" .
