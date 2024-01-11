@@ -35,6 +35,7 @@ import gr.tuc.ifc4.IfcRelFillsElement;
 import gr.tuc.ifc4.IfcSite;
 import gr.tuc.ifc4.IfcSpace;
 import gr.tuc.ifc4.IfcSpatialElement;
+import gr.tuc.ifc4.IfcText;
 import gr.tuc.ifc4.IfcUnitaryControlElement;
 import gr.tuc.ifc4.IfcUnitaryControlElementTypeEnum;
 import gr.tuc.ifc4.IfcUnitaryEquipment;
@@ -64,8 +65,11 @@ public class Converter {
 		rdfModel.setNsPrefix("om", "http://openmetrics.eu/openmetrics#");
 		rdfModel.setNsPrefix("brick", "https://brickschema.org/schema/Brick#");
 		rdfModel.setNsPrefix("ref", "https://brickschema.org/schema/Brick/ref#");
-		rdfModel.setNsPrefix("props", "https://w3id.org/props#");
-		rdfModel.setNsPrefix("saref", "http://w3id.irg/saref#");
+		rdfModel.setNsPrefix("saref", "https://saref.etsi.org/core#");
+		rdfModel.setNsPrefix("s4ener", "https://saref.etsi.org/saref4ener#");
+		rdfModel.setNsPrefix("s4bldg", "https://saref.etsi.org/saref4bldg#");
+		
+		
 		Iterator<IfcProject> projectIterator = ifcModel.getAllE(IfcProject.class).iterator();
 		if(projectIterator.hasNext()) {
 			IfcProject ifcProject = projectIterator.next();
@@ -200,6 +204,9 @@ public class Converter {
 			resSpace.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Space"));	
 			resSpace.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "hasExternalReference"), resSpaceIfcRef);
 			//
+			resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasPart"), resSpace);
+			
+			//
 			// properties
 			parsePsets(ifcSpace, resSpace);
 			//
@@ -213,7 +220,8 @@ public class Converter {
 						IfcZone ifcZone = (IfcZone) relAssignsToGroup.getRelatingGroup();
 						//
 						//
-						Resource resZoneIfcRef = rdfModel.createResource();
+						Resource resZoneIfcRef = rdfModel.createResource(rdfModel.getNsPrefixURI("om") + "ZoneRef_" + ifcZone.getExpressId());
+						resZoneIfcRef.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("ref") + "IFCReference"));
 						resZoneIfcRef.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "ifcName"), ifcZone.getName() != null ? ifcZone.getName().getValue() : "Undefined" );
 						resZoneIfcRef.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "ifcGlobalID"), ResourceFactory.createStringLiteral( ifcZone.getGlobalId().getValue() ) );
 						//
@@ -287,12 +295,23 @@ public class Converter {
 		}else if(product instanceof IfcUnitaryControlElement) {
 			IfcUnitaryControlElement ifcUnitaryControlElement = (IfcUnitaryControlElement) product;		
 			if(ifcUnitaryControlElement.getPredefinedType().equals(IfcUnitaryControlElementTypeEnum.THERMOSTAT)) {
-				Resource resControlPanel = rdfModel.createResource( rdfModel.getNsPrefixURI("om") + "Element_" + ifcUnitaryControlElement.getExpressId() );
-				resControlPanel.addLiteral(RDFS.label, ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getName() != null ? ifcUnitaryControlElement.getName().getValue() : "Undefined" ));
+				
+				
+				
+				
+				Resource resControlPanel = rdfModel.createResource( rdfModel.getNsPrefixURI("om") + getSerial(product) + "_Controller" );
+				
+				Resource resControlPanelRef = rdfModel.createResource();
+				resControlPanelRef.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "ifcName"), ifcUnitaryControlElement.getName() != null ? ifcUnitaryControlElement.getName().getValue() : "Undefined" );
+				resControlPanelRef.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "ifcGlobalID"), ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getGlobalId().getValue() ) );
+				
 				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("brick") + "Thermostat"));
-				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("saref") + "Device"));
-				resControlPanel.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasCompressedGuid"), ResourceFactory.createStringLiteral( ifcUnitaryControlElement.getGlobalId().getValue() ));
+				resControlPanel.addProperty(RDF.type, ResourceFactory.createResource( rdfModel.getNsPrefixURI("s4bldg") + "UnitaryControlElement"));
+				resControlPanel.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("ref") + "hasExternalReference"), resControlPanelRef);
+							
 				resControlPanel.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "hasLocation"), resParent);
+				resParent.addProperty(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("brick") + "isLocationOf"), resControlPanel);
+				
 				// add psets
 				parsePsets(ifcUnitaryControlElement, resControlPanel);
 			}else {
@@ -376,7 +395,7 @@ public class Converter {
 							IfcValue ifcValue = propertySignleValue.getNominalValue();
 							if(ifcValue instanceof IfcIdentifier) {
 								IfcIdentifier ifcIdentifier = (IfcIdentifier) ifcValue;
-								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("props") + "hasSerialNumber"),  ResourceFactory.createStringLiteral(ifcIdentifier.getValue()));
+								resProduct.addLiteral(ResourceFactory.createProperty(rdfModel.getNsPrefixURI("s4ener") + "hasSerialNumber"),  ResourceFactory.createStringLiteral(ifcIdentifier.getValue()));
 							}
 						}else if(propertySignleValue.getName().getValue().equalsIgnoreCase("COP")) {
 							IfcValue ifcValue = propertySignleValue.getNominalValue();
@@ -398,4 +417,33 @@ public class Converter {
 			}
 		}
 	}
+	
+	
+	public String getSerial(IfcProduct ifcProduct) {
+		Iterator<IfcRelDefinesByProperties> windowRelDefinesByProperties = ifcProduct.getIsDefinedBy().iterator();
+		while(windowRelDefinesByProperties.hasNext()) {
+			IfcRelDefinesByProperties relDefinesByProperties = windowRelDefinesByProperties.next();
+			if(relDefinesByProperties.getRelatingPropertyDefinition() instanceof IfcPropertySet) {
+				IfcPropertySet propertySet = (IfcPropertySet) relDefinesByProperties.getRelatingPropertyDefinition();
+				Iterator<IfcProperty> propertiesIterator = propertySet.getHasProperties().iterator();
+				while(propertiesIterator.hasNext()) {
+					IfcProperty ifcProperty = propertiesIterator.next();
+					if(ifcProperty instanceof IfcPropertySingleValue) {
+						IfcPropertySingleValue propertySignleValue = (IfcPropertySingleValue) ifcProperty;
+						 if(propertySignleValue.getName().getValue().equalsIgnoreCase("Serial")) {
+							IfcValue ifcValue = propertySignleValue.getNominalValue();
+							if(ifcValue instanceof IfcText) {
+								IfcText ifcText = (IfcText) ifcValue;
+								return ifcText.getValue();
+							}
+						}
+					}
+				}
+			}else {
+				log.warn("unsupported case");
+			}
+		}
+		return null;
+	}
+	
 }
