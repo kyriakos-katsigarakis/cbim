@@ -1,0 +1,197 @@
+@prefix schema: <http://schema.org#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix om:    <http://openmetrics.eu/openmetrics#> .
+@prefix saref: <https://saref.etsi.org/core/> .
+@prefix props: <https://w3id.org/props#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix s4ener: <https://saref.etsi.org/saref4ener/> .
+@prefix s4bldg: <https://saref.etsi.org/saref4bldg/> .
+
+        om:Building_140  a brick:Building ;
+        ref:ifcName      "H3A" ;
+        brick:hasPart    om:BuildingStorey_159;
+        ref:ifcGlobalID  "0a0u_yaVr91RamT04O09sz" ;
+	brick:hasPoint om:PriceSchedule .
+
+        om:BuildingStorey_159  a   brick:Storey;
+        ref:ifcName      "Level 0" ;
+        brick:hasPart    om:Space_4137 , om:Space_969,  om:Space_4138 , om:Space_970;
+        ref:ifcGlobalID  "0a0u_yaVr91RamT07d$s9I" .
+
+        om:Space_4137  a brick:Space ;
+        ref:ifcName      "I5.WC" ;
+        ref:ifcGlobalID  "03v2_09fP0Px$bJnMmgxW" .
+        
+        om:Space_969  a  brick:Space ;
+        ref:ifcName      "I5" ;
+        ref:ifcGlobalID  "3kT8I8pp95QAZ7pLPg6v4c" ;
+	brick:isLocationOf om:Controller_RC04N0065, om:HVAC_49488 .
+      
+        om:Zone_50121  a       brick:Zone ;
+        ref:ifcName      "I5:472209" ;
+        brick:hasPart  om:Space_969 , om:Space_4137 ;
+	brick:hasPoint om:BedOccSchedule .
+        
+        om:HVAC_49488    a      brick:Terminal_Unit, saref:HVAC ;
+        ref:ifcName             "SPLIT_AC:ASYG18:466636" ;
+	brick:hasTag		"FlexibilityResource";
+        brick:feeds              om:Zone_50121 ;
+        brick:hasLocation        om:Space_969 ;
+	ref:ifcGlobalID  "0pdA20AILAhwAAsAlgpbbw" .
+
+        om:Controller_RC04N0065     a           brick:Thermostat, s4bldg:UnitaryControlElement ; 
+        ref:ifcName                "OPENLINK:OPENLINK-ROOM-CONTROLLER:434695" ;
+	brick:hasLocation        om:Space_969 ;
+	brick:hasPoint           om:RC04N0065_OccSensingPoint , om:RC04N0065_ZoneSetpoint, om:RC04N0065_SetpointMin, om:RC04N0065_SetpointMax, om:RC04N0065_OnCommand , 	om:RC04N0065_OffCommand ;
+        ref:ifcGlobalID  "1$hwS2P_zBQfIJrrfYGZgg" ;
+        s4ener:hasSerialNumber    "RC04N0065"  ;
+        saref:hasFunction om:RC04N0065_SetPointFunction, om:RC04N0065_OnOffFunction, om:RC04N0065_OccSensingFunction, om:RC04N0065_TempSensingFunction .
+        
+        om:RC04N0065_ZoneSetpoint
+        a                  brick:Zone_Air_Temperature_Setpoint, saref:setLevelCommand; 
+        ref:hasTimeseriesId    "TUC.245.77.R48" .
+
+        om:RC04N0065_SetpointMin
+        a                 brick:Min_Temperature_Setpoint_Limit, saref:FeatureOfInterest ;
+	saref:hasProperty om:Temperature;
+        ref:hasTimeseriesId    "TUC.245.77.R54" .
+
+        om:RC04N0065_SetpointMax
+        a                  brick:Max_Temperature_Setpoint_Limit, saref:FeatureOfInterest ;
+	saref:hasProperty om:Temperature;
+        ref:hasTimeseriesId   "TUC.245.77.R55" .
+
+     	om:RC04N0065_OccSensingFunction a saref:SensingFunction ;
+   	saref:hasSensorType om:Occupancy;
+	saref:hasCommand om:RC04N0065_OccSensingPoint .
+
+	om:Occupancy a saref:Occupancy.         	
+
+   	om:RC04N0065_OccSensingPoint    a         brick:Occupancy_Sensor, saref:GetSensingDataCommand ;
+        brick:hasLocation  om:Space_969 ;
+        ref:hasTimeseriesId    "TUC.245.77.R44" .
+
+	om:RC04N0065_TempSensingFunction a saref:SensingFunction ;
+   	saref:hasSensorType om:Temperature ;
+	saref:hasCommand om:RC04N0065_TempSensingPoint .
+
+	om:Temperature a saref:Temperature. 
+ 
+	om:RC04N0065_TempSensingPoint a brick:Zone_Air_Temperature_Sensor, saref:GetSensingDataCommand ;
+        brick:hasLocation  om:Space_969 ;
+        ref:hasTimeseriesId    "TUC.245.77.R44" .       
+
+        om:RC04N0065_SetPointFunction a saref:LevelControlFunction, saref:ActuatingFunction ;
+        saref:hasCommand om:RC04N0065_ZoneSetpoint .
+
+       
+        om:RC04N0065_OnOffFunction a saref:OnOffFunction, saref:ActuatingFunction ;
+        saref:hasCommand om:RC04N0065_OnCommand, om:RC04N0065_OffCommand .
+
+        om:RC04N0065_OffCommand a brick:Off_Command, saref:OffCommand ;
+	ref:hasTimeseriesId  "TUC.245.77.R46" .
+
+        om:RC04N0065_OnCommand a brick:On_Command, saref:OnCommand ;
+	ref:hasTimeseriesId  "TUC.245.77.R46" .
+
+
+	om:PriceSchedule a brick:Parameter, saref:FeatureOfInterest ;
+	saref:hasProperty om:Price ;
+	ref:hasTimeseriesId  "PriceElectricPowerDynamic" . 
+
+	om:Price a saref:Price . 
+
+	om:BedOccSchedule a brick:Parameter, saref:FeatureOfInterest ;
+	saref:hasProperty om:Occupancy ;
+	ref:hasTimeseriesId  "BedOccSchedule" . 
+
+
+
+
+
+
+
+
+
+        om:Space_4138  a brick:Space ;
+        ref:ifcName      "I5.WC" ;
+        ref:ifcGlobalID  "03v2_09fP0Px$bJnMmgxW" .
+        
+        om:Space_970  a  brick:Space ;
+        ref:ifcName      "I5" ;
+        ref:ifcGlobalID  "3kT8I8pp95QAZ7pLPg6v4c" ;
+	brick:isLocationOf om:Controller_RC04N0066, om:HVAC_49489 .
+      
+        om:Zone_50122  a       brick:Zone ;
+        ref:ifcName      "I5:472209" ;
+        brick:hasPart  om:Space_4138, om:Space_970  ;
+	brick:hasPoint om:BedOccSchedule .
+        
+
+
+
+        om:HVAC_49489    a      brick:Terminal_Unit, saref:HVAC ;
+        ref:ifcName             "SPLIT_AC:ASYG18:466637" ;
+	brick:hasTag		"FlexibilityResource";
+        brick:feeds              om:Zone_50122 ;
+        brick:hasLocation        om:Space_970 ;
+	ref:ifcGlobalID  "0pdA20AILAhwAAsAlgpbbw" .
+
+        om:Controller_RC04N0066     a           brick:Thermostat, s4bldg:UnitaryControlElement ; 
+        ref:ifcName                "OPENLINK:OPENLINK-ROOM-CONTROLLER:434696" ;
+	brick:hasLocation        om:Space_970 ;
+	brick:hasPoint           om:RC04N0066_OccSensingPoint , om:RC04N0066_ZoneSetpoint, om:RC04N0066_SetpointMin, om:RC04N0066_SetpointMax, om:RC04N0066_OnCommand , 	om:RC04N0066_OffCommand ;
+        ref:ifcGlobalID  "1$hwS2P_zBQfIJrrfYGZgg" ;
+        s4ener:hasSerialNumber    "RC04N0066"  ;
+        saref:hasFunction om:RC04N0066_SetPointFunction, om:RC04N0066_OnOffFunction, om:RC04N0066_OccSensingFunction, om:RC04N0066_TempSensingFunction .
+        
+        om:RC04N0066_ZoneSetpoint
+        a                  brick:Zone_Air_Temperature_Setpoint, saref:setLevelCommand; 
+        ref:hasTimeseriesId    "TUC.245.77.R49" .
+
+        om:RC04N0066_SetpointMin
+        a                 brick:Min_Temperature_Setpoint_Limit, saref:FeatureOfInterest ;
+	saref:hasProperty om:Temperature;
+        ref:hasTimeseriesId    "TUC.245.77.R56" .
+
+        om:RC04N0066_SetpointMax
+        a                  brick:Max_Temperature_Setpoint_Limit, saref:FeatureOfInterest ;
+	saref:hasProperty om:Temperature;
+        ref:hasTimeseriesId   "TUC.245.77.R57" .
+
+     	om:RC04N0066_OccSensingFunction a saref:SensingFunction ;
+   	saref:hasSensorType om:Occupancy;
+	saref:hasCommand om:RC04N0066_OccSensingPoint .
+
+	om:Occupancy a saref:Occupancy.         	
+
+   	om:RC04N0066_OccSensingPoint    a         brick:Occupancy_Sensor, saref:GetSensingDataCommand ;
+        brick:hasLocation  om:Space_969 ;
+        ref:hasTimeseriesId    "TUC.245.77.R45" .
+
+	om:RC04N0066_TempSensingFunction a saref:SensingFunction ;
+   	saref:hasSensorType om:Temperature ;
+	saref:hasCommand om:RC04N0066_TempSensingPoint .
+
+	om:Temperature a saref:Temperature. 
+ 
+	om:RC04N0066_TempSensingPoint a brick:Zone_Air_Temperature_Sensor, saref:GetSensingDataCommand ;
+        brick:hasLocation  om:Space_969 ;
+        ref:hasTimeseriesId    "TUC.245.77.R45" .       
+
+        om:RC04N0066_SetPointFunction a saref:LevelControlFunction, saref:ActuatingFunction ;
+        saref:hasCommand om:RC04N0066_ZoneSetpoint .
+
+       
+        om:RC04N0066_OnOffFunction a saref:OnOffFunction, saref:ActuatingFunction ;
+        saref:hasCommand om:RC04N0066_OnCommand, om:RC04N0066_OffCommand .
+
+        om:RC04N0066_OffCommand a brick:Off_Command, saref:OffCommand ;
+	ref:hasTimeseriesId  "TUC.245.77.R47" .
+
+        om:RC04N0066_OnCommand a brick:On_Command, saref:OnCommand ;
+	ref:hasTimeseriesId  "TUC.245.77.R47" .
